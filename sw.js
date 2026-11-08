@@ -1,8 +1,9 @@
 /* MeviCar Cockpit – Service Worker */
-const CACHE = "mevicar-cockpit-v2";
+const CACHE = "mevicar-cockpit-v3";
 const ASSETS = [
   "./",
   "./index.html",
+  "./kb.js",
   "./manifest.webmanifest",
   "./icons/icon.svg"
 ];
