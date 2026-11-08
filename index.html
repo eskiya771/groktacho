@@ -24,6 +24,11 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,sans-s
 .view.on{display:flex}
 .tb{height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(8,18,32,.65);border-bottom:1px solid var(--b);font-size:12px;flex-shrink:0}
 .brand{color:var(--a);font-weight:600;letter-spacing:.07em}
+.upd{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;border:1px solid var(--b);background:rgba(0,200,255,.1);color:var(--a);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.upd:active{background:rgba(0,200,255,.25)}
+.upd.spin svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tb-right{display:flex;align-items:center;gap:10px;color:var(--m)}
 .toast{position:absolute;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);background:#102036;border:1px solid var(--b);padding:8px 14px;border-radius:10px;font-size:12px;opacity:0;transition:.25s;z-index:50;pointer-events:none;white-space:nowrap}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .rot{display:none;position:fixed;inset:0;z-index:100;background:#0a1628;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:20px}
@@ -89,7 +94,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,sans-s
 </aside>
 <div class="main">
 <div class="view on" id="v-navi">
-<div class="tb"><span class="brand">MEVICAR NEXT</span><span style="color:var(--m)"><span style="color:var(--ok)">●</span> GPS · LTE · <span id="clk">--:--</span></span></div>
+<div class="tb"><span class="brand">MEVICAR NEXT</span><span class="tb-right"><span style="color:var(--ok)">●</span> GPS · LTE · <span id="clk">--:--</span><button class="upd" type="button" data-upd title="App aktualisieren"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Update</button></span></div>
 <div class="map"><div class="grid"></div></div>
 <div class="panel" id="navHome">
 <div class="sbx"><span>🔍</span><input id="q" placeholder="Ort oder Adresse"/><button id="mic" style="border:0;background:rgba(0,200,255,.12);border-radius:8px;width:28px;height:28px;color:var(--a);cursor:pointer">🎤</button></div>
@@ -111,7 +116,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,sans-s
 </div></div>
 </div>
 <div class="view" id="v-tacho">
-<div class="tb"><span class="brand">TACHO</span><span style="color:var(--m)">Klassik · <span id="tachoMode">Standby</span></span></div>
+<div class="tb"><span class="brand">TACHO</span><span class="tb-right">Klassik · <span id="tachoMode">Standby</span><button class="upd" type="button" data-upd title="App aktualisieren"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Update</button></span></div>
 <div class="tacho-wrap">
 <div class="gauges">
 <div class="gauge"><canvas id="cSpeed" width="400" height="400"></canvas>
@@ -133,7 +138,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,sans-s
 </div>
 </div>
 <div class="view" id="v-tachonext">
-<div class="tb"><span class="brand">TACHO NEXT</span><span style="color:var(--m)">Modern · <span id="tnMode">Standby</span></span></div>
+<div class="tb"><span class="brand">TACHO NEXT</span><span class="tb-right">Modern · <span id="tnMode">Standby</span><button class="upd" type="button" data-upd title="App aktualisieren"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Update</button></span></div>
 <div class="tn-wrap">
 <div class="tn-gauges">
 <div class="tn-card"><canvas id="tnSpeed" width="420" height="420"></canvas>
@@ -150,7 +155,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,sans-s
 </div>
 </div>
 <div class="view" id="v-apps">
-<div class="tb"><span class="brand">DEIN COCKPIT</span><span style="color:var(--m)">MEVICAR NEXT</span></div>
+<div class="tb"><span class="brand">DEIN COCKPIT</span><span class="tb-right">MEVICAR NEXT<button class="upd" type="button" data-upd title="App aktualisieren"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Update</button></span></div>
 <div style="flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:16px;padding:24px;align-content:start;overflow:auto">
 <button class="nb" data-v="tachonext" style="width:auto;height:auto;padding:20px;gap:8px;background:rgba(0,200,255,.06);border:1px solid var(--b)"><span style="font-size:28px">⚙️</span><span style="font-size:12px;color:var(--a)">Tacho Next</span></button>
 <button class="nb" data-v="tacho" style="width:auto;height:auto;padding:20px;gap:8px;background:rgba(0,200,255,.06);border:1px solid var(--b)"><span style="font-size:28px">⏱</span><span style="font-size:12px;color:var(--a)">Tacho</span></button>
@@ -343,7 +348,24 @@ function drawNext(){
 $("tnDemo").onclick=()=>setDemo(!demoOn);
 $("tnStop").onclick=()=>{setDemo(false);toast("Gestoppt")};
 window.addEventListener("resize",()=>{resizeClassic();resizeNext();drawClassic();drawNext()});
-if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+async function doUpdate(btn){
+  if(btn){btn.classList.add("spin");btn.disabled=true}
+  toast("Prüfe auf Update…");
+  try{
+    if("serviceWorker" in navigator){
+      const reg=await navigator.serviceWorker.register("./sw.js");
+      await reg.update();
+      if(reg.waiting){reg.waiting.postMessage({type:"SKIP_WAITING"})}
+      const keys=await caches.keys();
+      await Promise.all(keys.map(k=>caches.delete(k)));
+    }
+  }catch(e){console.warn(e)}
+  setTimeout(()=>{location.reload()},400);
+}
+document.querySelectorAll("[data-upd]").forEach(b=>b.addEventListener("click",()=>doUpdate(b)));
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("./sw.js").catch(()=>{});
+}
 setTimeout(()=>{resizeClassic();resizeNext();drawClassic();drawNext()},50);
 </script>
 </body>
