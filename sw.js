@@ -1,19 +1,10 @@
-/* MeviCar Navi – Service Worker */
-const CACHE = "mevicar-navi-v1";
+/* MeviCar Cockpit – Service Worker */
+const CACHE = "mevicar-cockpit-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./icons/icon-72.png",
-  "./icons/icon-96.png",
-  "./icons/icon-128.png",
-  "./icons/icon-144.png",
-  "./icons/icon-152.png",
-  "./icons/icon-192.png",
-  "./icons/icon-384.png",
-  "./icons/icon-512.png",
-  "./icons/maskable-192.png",
-  "./icons/maskable-512.png"
+  "./icons/icon.svg"
 ];
 
 self.addEventListener("install", (event) => {
@@ -30,10 +21,13 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
+});
+
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
-
   event.respondWith(
     caches.match(req).then((cached) => {
       const fetched = fetch(req)
