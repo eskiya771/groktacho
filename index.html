@@ -1,37 +1,151 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a1628" />
-  <meta name="color-scheme" content="dark" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="MeviCar Navi" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="application-name" content="MeviCar Navi" />
-  <meta name="description" content="MeviCar Next Cockpit-Navigation – Offline-fähige PWA im Querformat" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <title>MeviCar Next · Navi</title>
-  <style>
-    /* Full styles and app loaded from secondary commit - placeholder bootstrap */
-    body { margin:0; background:#0a1628; color:#e8f1fa; font-family: system-ui, sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; }
-    .boot { text-align:center; padding:24px; }
-    a { color:#00c8ff; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#0a1628"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="MeviCar Navi"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<title>MeviCar Next · Navi</title>
+<style>
+:root{--bg:#0a1628;--panel:rgba(16,32,54,.94);--card:rgba(22,42,68,.88);--a:#00c8ff;--t:#e8f1fa;--m:#8ba3bd;--d:#5a758f;--ok:#3dd68c;--w:#f5a623;--b:rgba(0,200,255,.18)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;font-family:system-ui,sans-serif;background:var(--bg);color:var(--t);user-select:none}
+.shell{display:grid;grid-template-columns:60px 1fr;height:100%;background:radial-gradient(ellipse at 70% 40%,#0f2a45,#0a1628 60%)}
+.sb{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;background:rgba(8,18,32,.9);border-right:1px solid var(--b);z-index:20}
+.nb{width:48px;height:48px;border-radius:12px;border:0;background:0;color:var(--m);font-size:9px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.nb.on{background:rgba(0,200,255,.15);color:var(--a);box-shadow:0 0 0 1px rgba(0,200,255,.35)}
+.main{position:relative;overflow:hidden}
+.tb{height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(8,18,32,.65);border-bottom:1px solid var(--b);font-size:11px;z-index:15;position:relative}
+.brand{color:var(--a);font-weight:600;letter-spacing:.06em}
+.map{position:absolute;inset:0;background:radial-gradient(circle at 75% 55%,rgba(0,80,140,.2),transparent 50%),#0c1c30}
+.grid{position:absolute;inset:-15%;background-image:linear-gradient(rgba(0,180,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,.04) 1px,transparent 1px);background-size:70px 70px;transform:perspective(500px) rotateX(45deg) scale(1.3);transform-origin:center 70%}
+.ml{position:absolute;top:26%;left:58%;font-size:11px;color:rgba(180,210,240,.3)}
+.rp{position:absolute;inset:0;display:none;pointer-events:none;z-index:2}
+.rp svg{width:100%;height:100%}
+.rl{fill:none;stroke:var(--a);stroke-width:5;stroke-linecap:round;filter:drop-shadow(0 0 6px rgba(0,200,255,.4))}
+.rl.go{stroke-dasharray:10 7;animation:d 1s linear infinite}
+@keyframes d{to{stroke-dashoffset:-17}}
+.pt{position:absolute;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);z-index:3;display:none}
+.pt.s{background:var(--a);box-shadow:0 0 0 3px rgba(0,200,255,.3)}
+.pt.e{background:#fff;border:2px solid var(--a)}
+.pt.c{width:18px;height:18px;background:var(--a);border:2px solid #fff;box-shadow:0 0 12px var(--a);transition:left .7s,top .7s}
+.panel{position:absolute;top:48px;left:12px;width:min(320px,calc(100% - 24px));background:var(--panel);backdrop-filter:blur(20px);border:1px solid var(--b);border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.4);z-index:10;transition:.2s}
+.panel.hide{opacity:0;pointer-events:none;transform:translateY(6px)}
+.sbx{display:flex;align-items:center;gap:8px;margin:10px;background:rgba(0,0,0,.3);border:1px solid var(--b);border-radius:10px;padding:9px 11px}
+.sbx input{flex:1;background:0;border:0;outline:0;color:var(--t);font-size:14px;font-family:inherit}
+.chips{display:flex;gap:6px;padding:0 10px 8px;overflow-x:auto}
+.chip{flex-shrink:0;padding:5px 9px;border-radius:14px;background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.2);color:var(--a);font-size:11px;cursor:pointer}
+.sec{padding:2px 10px 10px}
+.st{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--d);margin-bottom:6px}
+.favs{display:flex;gap:6px;overflow-x:auto}
+.fav{flex-shrink:0;width:72px;border:0;background:0;color:var(--t);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;border-radius:10px;font-size:11px}
+.fi{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px}
+.fi.h{background:linear-gradient(145deg,#00b4e4,#007a9e)}.fi.w{background:linear-gradient(145deg,#c4a574,#8a6d3b)}.fi.g{background:linear-gradient(145deg,#7a8a9a,#4a5a6a)}
+.fm{font-size:9px;color:var(--m)}
+.rec{display:flex;flex-direction:column;gap:5px;max-height:160px;overflow-y:auto}
+.ri{display:flex;align-items:center;gap:8px;padding:9px;border-radius:10px;background:var(--card);border:0;cursor:pointer;text-align:left;width:100%;color:inherit;font-family:inherit}
+.ri-n{font-size:13px;font-weight:500}.ri-m{font-size:10px;color:var(--m)}
+.sugg{display:none;padding:0 10px 8px}.sugg.on{display:block}
+.si{padding:7px;border-radius:8px;cursor:pointer;font-size:13px}.si:hover{background:rgba(255,255,255,.05)}
+.ph{padding:12px}
+.ph h2{font-size:16px}
+.addr{font-size:11px;color:var(--m);margin:4px 0 10px}
+.stats{display:flex;gap:6px;margin-bottom:8px}
+.ss{flex:1;background:rgba(0,0,0,.25);border-radius:8px;padding:7px;text-align:center}
+.sv{font-size:15px;font-weight:600;color:var(--a)}.sl{font-size:9px;color:var(--m);text-transform:uppercase}
+.badge{font-size:11px;color:var(--ok);margin-bottom:8px}
+.alts{display:flex;gap:5px;margin-bottom:10px}
+.ac{flex:1;padding:5px;border-radius:8px;background:rgba(0,0,0,.25);border:1px solid transparent;color:var(--m);font-size:10px;text-align:center;cursor:pointer}
+.ac.on{border-color:var(--a);color:var(--a);background:rgba(0,200,255,.12)}
+.ac .x{display:block;font-size:12px;font-weight:600}
+.acts{display:flex;gap:6px}
+.btn{flex:1;height:40px;border-radius:10px;border:0;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
+.bs{background:rgba(255,255,255,.08);color:var(--t)}.bp{background:linear-gradient(145deg,#00c8ff,#0090cc);color:#041018}
+.nt{display:flex;gap:10px;align-items:center;padding:8px;background:rgba(0,0,0,.3);border-radius:10px;margin-bottom:10px}
+.ti{width:44px;height:44px;border-radius:10px;background:linear-gradient(145deg,#00c8ff,#007aab);display:flex;align-items:center;justify-content:center;font-size:20px;color:#041018}
+.td{font-size:18px;font-weight:700;color:var(--a)}.ts{font-size:12px}
+.eta{display:flex;padding:8px 0;margin-bottom:8px;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.ei{flex:1;text-align:center}.ev{font-size:14px;font-weight:600}.el{font-size:9px;color:var(--m)}
+.bar{height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:10px;overflow:hidden}
+.fill{height:100%;width:18%;background:var(--a);transition:width .5s}
+.toast{position:absolute;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);background:#102036;border:1px solid var(--b);padding:8px 14px;border-radius:10px;font-size:12px;opacity:0;transition:.25s;z-index:50;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.rot{display:none;position:fixed;inset:0;z-index:100;background:#0a1628;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:20px}
+@media(orientation:portrait){.rot{display:flex}.shell{visibility:hidden}}
+</style>
 </head>
 <body>
-  <div class="boot">
-    <h1>MeviCar Navi</h1>
-    <p>Vollständige UI wird gleich geladen…</p>
-    <p><a href="https://github.com/Eskiya771/groktacho">Repo</a></p>
-  </div>
-  <script>
-    // Redirect note: full index will replace this file in next commit
-    console.log('MeviCar Navi bootstrap');
-  </script>
+<div class="shell">
+<aside class="sb">
+<button class="nb on">🧭<br>Navi</button>
+<button class="nb">📻<br>Radio</button>
+<button class="nb">📞<br>Tel</button>
+<button class="nb" style="margin-top:auto">▦<br>Apps</button>
+</aside>
+<div class="main">
+<div class="tb"><span class="brand">MEVICAR NEXT</span><span style="color:var(--m)"><span style="color:var(--ok)">●</span> GPS · LTE · <span id="clk">--:--</span></span></div>
+<div class="map"><div class="grid"></div><span class="ml">Erlangen · Demo-Karte</span>
+<div class="rp" id="rp"><svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"><path id="rl" class="rl" d="M280 420L340 380L420 400L480 340L560 360L620 300L700 320L760 280L840 300L920 260"/></svg></div>
+<div class="pt s" id="ps" style="left:23.5%;top:52.5%"></div>
+<div class="pt e" id="pe" style="left:76.5%;top:32.5%"></div>
+<div class="pt c" id="pc" style="left:23.5%;top:52.5%"></div>
+</div>
+<div class="panel" id="home">
+<div class="sbx"><span>🔍</span><input id="q" placeholder="Ort oder Adresse" autocomplete="off"/><button id="mic" style="border:0;background:rgba(0,200,255,.12);border-radius:8px;width:28px;height:28px;color:var(--a);cursor:pointer">🎤</button></div>
+<div class="chips"><span class="chip" data-k="home">🏠 Standort</span><span class="chip" data-k="home">Zuhause</span><span class="chip" data-k="work">Arbeit</span><span class="chip" data-k="park">🅿️ Parkplatz</span></div>
+<div class="sugg" id="sugg"></div>
+<div class="sec" id="fs"><div class="st">Favoriten</div><div class="favs">
+<button class="fav" data-k="home"><div class="fi h">🏠</div>Privat<span class="fm">8 min</span></button>
+<button class="fav" data-k="work"><div class="fi w">▦</div>Arbeit<span class="fm">14 min</span></button>
+<button class="fav" data-k="gym"><div class="fi g">↗</div>Gym<span class="fm">11 min</span></button>
+</div></div>
+<div class="sec" id="rs"><div class="st">Letzte Ziele</div><div class="rec">
+<button class="ri" data-k="nord"><span>⏱</span><div><div class="ri-n">Erlangen-Nord</div><div class="ri-m">12 min · 7,4 km</div></div></button>
+<button class="ri" data-k="arc"><span>⏱</span><div><div class="ri-n">Erlangen Arcaden</div><div class="ri-m">9 min · 4,1 km</div></div></button>
+<button class="ri" data-k="hoe"><span>⏱</span><div><div class="ri-n">Höchstadt a.d. Aisch</div><div class="ri-m">28 min · 22 km</div></div></button>
+</div></div>
+</div>
+<div class="panel hide" id="prev"><div class="ph">
+<div style="display:flex;justify-content:space-between;align-items:center"><h2 id="pn">Ziel</h2><button id="px" style="border:0;background:rgba(255,255,255,.08);border-radius:8px;width:28px;height:28px;color:var(--m);cursor:pointer;font-size:16px">×</button></div>
+<div class="addr" id="pa">Demo</div>
+<div class="stats"><div class="ss"><div class="sv" id="stt">12 min</div><div class="sl">Dauer</div></div><div class="ss"><div class="sv" id="std">7,4 km</div><div class="sl">Distanz</div></div><div class="ss"><div class="sv" id="ste">14:34</div><div class="sl">Ankunft</div></div></div>
+<div class="badge" id="tb">● Verkehr fließt · +0 min</div>
+<div class="alts"><button class="ac on" data-t="12 min"><span class="x">12 min</span>Schnellste</button><button class="ac" data-t="14 min"><span class="x">14 min</span>Öko</button><button class="ac" data-t="18 min"><span class="x">18 min</span>Ohne AB</button></div>
+<div class="acts"><button class="btn bs" id="bf">☆ Favorit</button><button class="btn bp" id="bs">➤ Demo starten</button></div>
+</div></div>
+<div class="panel hide" id="nav"><div class="ph">
+<div style="font-size:10px;color:var(--w);letter-spacing:.05em;margin-bottom:6px">ROUTEN-DEMO · KEINE LIVE-NAVIGATION</div>
+<div class="nt"><div class="ti">➤</div><div><div class="td" id="nd">450 m</div><div class="ts" id="ns">Rechts auf Bayreuther Str.</div></div></div>
+<div class="eta"><div class="ei"><div class="ev" id="ne">14:34</div><div class="el">Ankunft</div></div><div class="ei"><div class="ev" id="nr">12 min</div><div class="el">Verbleibend</div></div><div class="ei"><div class="ev" id="nm">7,4 km</div><div class="el">Distanz</div></div></div>
+<div class="bar"><div class="fill" id="pf"></div></div>
+<div class="acts"><button class="btn bs" id="be">Route beenden</button><button class="btn bs" id="bn">Neues Ziel</button></div>
+</div></div>
+<div class="toast" id="to"></div>
+</div></div>
+<div class="rot"><div style="font-size:40px">📱</div><h2>Bitte Querformat</h2><p style="color:var(--m)">Für die Cockpit-Navigation drehen.</p></div>
+<script>
+const D={nord:{n:"Erlangen-Nord",a:"Erlangen-Nord · Demo",t:"12 min",d:"7,4 km",e:"14:34",tr:"Verkehr fließt · +0 min",td:"450 m",ts:"Rechts auf Bayreuther Str."},arc:{n:"Erlangen Arcaden",a:"Nürnberger Str. 5",t:"9 min",d:"4,1 km",e:"14:31",tr:"Verkehr fließt · +0 min",td:"220 m",ts:"Links in die Hauptstraße"},hoe:{n:"Höchstadt a.d. Aisch",a:"Höchstadt",t:"28 min",d:"22 km",e:"14:50",tr:"Leichter Verkehr · +3 min",td:"1,2 km",ts:"Weiter auf A3"},home:{n:"Privat",a:"Zuhause · Erlangen",t:"8 min",d:"3,8 km",e:"14:30",tr:"Verkehr fließt · +0 min",td:"180 m",ts:"Rechts in die Gartenstraße"},work:{n:"Arbeit",a:"Büro · Erlangen",t:"14 min",d:"8,2 km",e:"14:36",tr:"Leichter Verkehr · +2 min",td:"600 m",ts:"Links auf den Ring"},gym:{n:"Gymnasium",a:"Fridericianum",t:"11 min",d:"5,5 km",e:"14:33",tr:"Verkehr fließt · +0 min",td:"350 m",ts:"Geradeaus halten"},park:{n:"Parkplatz",a:"Parkhaus Arcaden",t:"6 min",d:"2,1 km",e:"14:28",tr:"Verkehr fließt · +0 min",td:"120 m",ts:"Einfahrt rechts"}};
+const SD=[{n:"Erlangen-Nord",a:"Erlangen",k:"nord"},{n:"Erlangen Arcaden",a:"Nürnberger Str.",k:"arc"},{n:"Höchstadt",a:"Aisch",k:"hoe"},{n:"Universität",a:"Erlangen",k:"gym"},{n:"Siemens Campus",a:"Erlangen",k:"work"}];
+let cur=null,prog=18,tm=null;
+const $=i=>document.getElementById(i);
+const toast=m=>{const t=$("to");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2e3)};
+const tick=()=>$("clk").textContent=new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});tick();setInterval(tick,3e4);
+function route(on){["rp","ps","pe"].forEach(i=>$ (i).style.display=on?"block":"none");$("pc").style.display="none";$("rl").classList.remove("go")}
+function openP(k){const d=D[k]||D.nord;cur=k;$("pn").textContent=d.n;$("pa").textContent=d.a;$("stt").textContent=d.t;$("std").textContent=d.d;$("ste").textContent=d.e;$("tb").textContent="● "+d.tr;$("home").classList.add("hide");$("nav").classList.add("hide");$("prev").classList.remove("hide");route(1);$("q").value="";$("sugg").classList.remove("on");$("fs").style.display="";$("rs").style.display=""}
+function start(){const d=D[cur]||D.nord;$("nd").textContent=d.td;$("ns").textContent=d.ts;$("ne").textContent=d.e;$("nr").textContent=d.t;$("nm").textContent=d.d;$("prev").classList.add("hide");$("nav").classList.remove("hide");$("pc").style.display="block";$("rl").classList.add("go");prog=12;$("pf").style.width=prog+"%";clearInterval(tm);tm=setInterval(()=>{prog=Math.min(88,prog+3+Math.random()*4);$("pf").style.width=prog+"%";const t=prog/100;$("pc").style.left=(23.5+t*53)+"%";$("pc").style.top=(52.5-t*20)+"%"},1600);toast("Route gestartet · Demo")}
+function end(){clearInterval(tm);$("nav").classList.add("hide");$("prev").classList.add("hide");$("home").classList.remove("hide");route(0);$("pc").style.left="23.5%";$("pc").style.top="52.5%";toast("Route beendet")}
+$("q").oninput=()=>{const v=$("q").value.trim().toLowerCase();if(!v){$("sugg").classList.remove("on");$("fs").style.display="";$("rs").style.display="";return}const m=SD.filter(s=>s.n.toLowerCase().includes(v)||s.a.toLowerCase().includes(v));$("sugg").innerHTML=m.map(s=>`<div class="si" data-k="${s.k}">📍 ${s.n} <span style="color:var(--m);font-size:11px">${s.a}</span></div>`).join("")||'<div style="padding:6px;color:var(--m);font-size:12px">Keine Treffer</div>';$("sugg").classList.add("on");$("fs").style.display="none";$("rs").style.display="none";[...$("sugg").children].forEach(el=>el.onclick=()=>openP(el.dataset.k))};
+$("mic").onclick=()=>{toast("🎤 Sprachsuche (Demo)");setTimeout(()=>openP("nord"),700)};
+document.querySelectorAll("[data-k]").forEach(el=>{if(el.closest(".alts"))return;el.addEventListener("click",()=>{if(el.dataset.k)openP(el.dataset.k)})});
+$("px").onclick=()=>{$("prev").classList.add("hide");$("home").classList.remove("hide");route(0)};
+$("bs").onclick=start;$("be").onclick=end;$("bn").onclick=()=>{end();$("q").focus()};
+$("bf").onclick=function(){this.textContent=this.textContent.includes("☆")?"★ Favorit":"☆ Favorit";toast(this.textContent.includes("★")?"Favorit gespeichert":"Entfernt")};
+document.querySelectorAll(".ac").forEach(c=>c.onclick=()=>{document.querySelectorAll(".ac").forEach(x=>x.classList.remove("on"));c.classList.add("on");$("stt").textContent=c.dataset.t;toast("Route gewechselt")});
+document.onkeydown=e=>{if(e.key==="Escape"){if(!$("nav").classList.contains("hide"))end();else if(!$("prev").classList.contains("hide"))$("px").click()}};
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script>
 </body>
 </html>
